@@ -1,0 +1,41 @@
+'Made by Joey Melo on Feb 28, 2021
+'Check the video tutorial at https://www.youtube.com/watch?v=wJMV9ccdsXY&ab_channel=JoeyMelo
+
+Sub SendEmails()
+    'Declare variables
+    Dim olApp As Outlook.Application
+    Dim olMail As Outlook.MailItem
+    Dim tblClients As ListObject
+    Dim arrFiles() As Variant
+    
+    'Connect with Outlook
+    Set olApp = New Outlook.Application
+
+    'Populate array with attachments list
+    arrFiles = Range("Attachments")
+    
+    'Initialize table variable
+    Set tblClients = ActiveSheet.ListObjects("tblClients")
+    
+    'Loop through table
+    For Each client In tblClients.ListColumns(5).DataBodyRange
+        
+        'Create new mail
+        Set myMail = olApp.CreateItem(olMailItem)
+        
+        With myMail
+            .To = client
+            .Subject = "Application Forms for Enrollment"
+            .Body = Range("Message")
+            
+            'Loop through files array
+            For Each file In arrFiles
+                .attachments.Add file
+            Next file
+            .Send
+        End With
+        
+    Next client
+
+MsgBox "Please Subscribe - https://www.youtube.com/channel/UCUFCHc0IvZH8OluaPdYUAzg"
+End Sub
